@@ -1,8 +1,39 @@
-import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 function Home() {
+  const [headerSlider, setHeaderSlider] = useState(null);
+  const [videoSlider, setVideoSlider] = useState(null);
+
+  useEffect(() => {
+    if (headerSlider === null) {
+      axios
+        .get(
+          `http://localhost:5000/api/headerSlider?page=home&key=header-banner`
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            const { data } = res.data;
+            if (data && data.length) {
+              setHeaderSlider(data);
+            }
+          }
+        });
+    }
+    if (videoSlider) {
+      axios
+        .get(`http://localhost:5000/api/headerSlider?page=home&key=intro-video`)
+        .then((res) => {
+          if (res.status === 200) {
+            const { data } = res.data;
+            if (data && data.length) {
+              setVideoSlider(data);
+            }
+          }
+        });
+    }
+  }, [headerSlider, videoSlider]);
+
   return (
     <>
       <section className='main-landing-section'>
@@ -12,25 +43,34 @@ function Home() {
           data-ride='carousel'
         >
           <ol className='carousel-indicators'>
-            <li
-              data-target='#carouselExampleIndicators'
-              data-slide-to='0'
-              className='active'
-            ></li>
-            <li data-target='#carouselExampleIndicators' data-slide-to='1'></li>
-            <li data-target='#carouselExampleIndicators' data-slide-to='2'></li>
+            {headerSlider &&
+              headerSlider.map((item, index) => (
+                <li
+                  data-target='#carouselExampleIndicators'
+                  data-slide-to={index}
+                  className={index === 0 ? 'active' : ''}
+                ></li>
+              ))}
           </ol>
+
           <div className='carousel-inner'>
-            <div className='carousel-item active'>
-              <div className='carousel-image slideimg1'></div>
-            </div>
-            <div className='carousel-item'>
-              <div className='carousel-image slideimg2'></div>
-            </div>
-            <div className='carousel-item'>
-              <div className='carousel-image slideimg3'></div>
-            </div>
+            {headerSlider &&
+              headerSlider.map((item, index) => (
+                <div
+                  className={`carousel-item ${index === 0 ? 'active' : ''}`}
+                  key={item.ID}
+                >
+                  <div
+                    className='carousel-image'
+                    style={{
+                      background:
+                        'url(' + item.Path + ') no-repeat center center fixed',
+                    }}
+                  ></div>
+                </div>
+              ))}
           </div>
+
           <div className='carousel-caption'>
             <a className='text-uppercase white style2-btn' href='about-us.html'>
               About Us
@@ -237,7 +277,7 @@ function Home() {
               </div>
             </div>
           </div>
-          <div className='product-slider'>
+          <div className='product-headerSlider'>
             <div className='card-container'>
               <a
                 href='https://www.vschooltrend.com/'
@@ -903,7 +943,7 @@ function Home() {
 
       <section className='video-award-bg-parallax products-section full-height'>
         <div className='container'>
-          <div className='video-award-slider'>
+          <div className='video-award-headerSlider'>
             <div className='card-container'>
               <a
                 href='https://www.vschooltrend.com/'

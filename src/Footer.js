@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router';
 
 function Footer() {
+  let loc = useLocation();
+  useEffect(() => {
+    let script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'js/slick.js?v=' + new Date().getTime();
+    document.getElementById('slick-script').innerText = '';
+    document.getElementById('slick-script').appendChild(script);
+  }, [loc]);
+
   return (
     <footer className='py-4 bg-default'>
       <div className='container text-left'>
