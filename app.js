@@ -11,12 +11,9 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 app.use(
   '/api',
   createProxyMiddleware({
-    target: 'http://localhost:8000/', //original url
-
+    target: 'http://localhost:8000/',
     changeOrigin: true,
-
     //secure: false,
-
     onProxyRes: function (proxyRes, req, res) {
       proxyRes.headers['Access-Control-Allow-Origin'] = '*';
     },

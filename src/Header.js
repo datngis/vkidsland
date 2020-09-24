@@ -98,9 +98,15 @@ function Header() {
                       className='dropdown-menu'
                       aria-labelledby='navbarDropdown'
                     >
-                      <a className='dropdown-item'>ENGLISH</a>
-                      <a className='dropdown-item'>中文</a>
-                      <a className='dropdown-item'>Bahasa</a>
+                      <a href='#link' className='dropdown-item'>
+                        ENGLISH
+                      </a>
+                      <a href='#link' className='dropdown-item'>
+                        中文
+                      </a>
+                      <a href='#link' className='dropdown-item'>
+                        Bahasa
+                      </a>
                     </div>
                   </li>
                   <li className='nav-item'>

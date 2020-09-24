@@ -17,13 +17,13 @@ function Footer() {
         <div className='row footer-media d-flex align-items-center'>
           <div className='col-md-7 col-8'>
             <div className='d-flex flex-column flex-md-row'>
-              <a href='#'>
+              <a href='#footer'>
                 <span className='px-2'>Term & Conditions </span>
               </a>
-              <a href='#'>
+              <a href='#footer'>
                 <span className='px-2'>Privacy Policy</span>
               </a>
-              <a href='#'>
+              <a href='#footer'>
                 <span className='px-2'>Social Media Privacy Policy</span>
               </a>
             </div>

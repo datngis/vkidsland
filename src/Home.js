@@ -4,9 +4,15 @@ import axios from 'axios';
 function Home() {
   const [headerSlider, setHeaderSlider] = useState(null);
   const [videoSlider, setVideoSlider] = useState(null);
+  const sampleSlider = [
+    { ID: 1, Path: 'assets/images/main-banner/banner01.jpg' },
+    { ID: 2, Path: 'assets/images/main-banner/banner02.jpg' },
+    { ID: 3, Path: 'assets/images/main-banner/banner03.jpg' },
+  ];
 
   useEffect(() => {
     if (headerSlider === null) {
+      setHeaderSlider(sampleSlider);
       axios
         .get(
           `http://localhost:5000/api/headerSlider?page=home&key=header-banner`
@@ -20,20 +26,20 @@ function Home() {
           }
         });
     }
-    if (videoSlider) {
-      axios
-        .get(`http://localhost:5000/api/headerSlider?page=home&key=intro-video`)
-        .then((res) => {
-          if (res.status === 200) {
-            const { data } = res.data;
-            if (data && data.length) {
-              setVideoSlider(data);
-            }
-          }
-        });
-    }
-  }, [headerSlider, videoSlider]);
+  }, [headerSlider, sampleSlider]);
 
+  useEffect(() => {
+    if (videoSlider === null) {
+      axios.get(`/api/headerSlider?page=home&key=intro-video`).then((res) => {
+        if (res.status === 200) {
+          const { data } = res.data;
+          if (data && data.length) {
+            setVideoSlider(data);
+          }
+        }
+      });
+    }
+  }, [videoSlider]);
   return (
     <>
       <section className='main-landing-section'>
@@ -785,6 +791,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto'
                     src='assets/images/legendary/2-Legendary-Circle-Pinky-Yap.jpg'
                   />
@@ -797,6 +804,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/3-Legendary-Circle-Alan-and-Cindy.jpg'
                   />
@@ -809,6 +817,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/4-Legend-Ambassador-Club-Kelly-Ong.jpg'
                   />
@@ -821,6 +830,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/5-Royal-Ambassador-Club-David-and-Janice.jpg'
                   />
@@ -833,6 +843,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/6-Royal-Ambassador-Club-Krystle-and-Sean.jpg'
                   />
@@ -845,6 +856,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/7-Royal-Ambassador-Club-Ethan-and-Vikki.jpg'
                   />
@@ -857,6 +869,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/8-Royal-Ambassador-Club-Vicky-and-Andy.jpg'
                   />
@@ -869,6 +882,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/9-Royal-Ambassador-Club-Jes-Tan.jpg'
                   />
@@ -881,6 +895,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/10-Star-Ambassador-Club-Teoh-Wey-Yi-.jpg'
                   />
@@ -893,6 +908,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/11-Star-Ambassador-Club-Jen-Chun-Kiat.jpg'
                   />
@@ -905,6 +921,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/12-Star-Ambassador-Club-Lim-Lea-Shuan.jpg'
                   />
@@ -917,6 +934,7 @@ function Home() {
               <div className='amd-content text-center'>
                 <div className='amd-portrait'>
                   <img
+                    alt=''
                     className='m-auto m-auto'
                     src='assets/images/legendary/13-Star-Ambassador-Club-Jane-Ang.jpg'
                   />

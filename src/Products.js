@@ -8,6 +8,7 @@ export default function Products() {
         <div className='video-wrap'>
           <div className='embed-responsive embed-responsive-16by9 js-videoWrapper'>
             <iframe
+              title='video'
               id='vschool-video'
               className='embed-responsive-item js-videoIframe'
               src=''
@@ -135,7 +136,11 @@ export default function Products() {
                   The Most Popular E-Learning Program In Malaysia
                 </p>
                 <NavLink to='https://www.vschooltrend.com'>
-                  <a className='style1-btn px-5 py-3' target='_blank'>
+                  <a
+                    className='style1-btn px-5 py-3'
+                    target='_blank'
+                    href='#findoutmore'
+                  >
                     Find Out More
                   </a>
                 </NavLink>
