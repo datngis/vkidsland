@@ -11,12 +11,23 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 app.use(
   '/api',
   createProxyMiddleware({
-    target: 'http://localhost:8000',
+    target: process.env.REACT_APP_PUBLIC_URL,
     changeOrigin: true,
     //secure: false,
     onProxyRes: function (proxyRes, req, res) {
       proxyRes.headers['Access-Control-Allow-Origin'] = '*';
-      console.log('resss', res, req);
+    },
+  })
+);
+
+app.use(
+  '/resources-url',
+  createProxyMiddleware({
+    target: process.env.REACT_APP_RESOURCE_URL,
+    changeOrigin: true,
+    //secure: false,
+    onProxyRes: function (proxyRes, req, res) {
+      proxyRes.headers['Access-Control-Allow-Origin'] = '*';
     },
   })
 );

@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Home() {
+  const resourceURL = process.env.REACT_APP_RESOURCE_URL;
+  const apiURL = process.env.REACT_APP_PUBLIC_URL;
+
   const [headerSlider, setHeaderSlider] = useState(null);
   const [mainVideo, setMainVideo] = useState(null);
   const [introVideos, setIntroVideos] = useState(null);
+
   const sampleSlider = [
     { ID: 1, Path: 'assets/images/main-banner/banner01.jpg' },
     { ID: 2, Path: 'assets/images/main-banner/banner02.jpg' },
@@ -15,7 +19,7 @@ function Home() {
     if (headerSlider === null) {
       setHeaderSlider(sampleSlider);
       axios
-        .get(`http://localhost:5000/api/slider?page=home&key=header-banner`)
+        .get(`${apiURL}/api/slider?page=home&key=header-banner`)
         .then((res) => {
           if (res.status === 200) {
             const { data } = res.data;
@@ -30,7 +34,7 @@ function Home() {
   useEffect(() => {
     if (mainVideo === null) {
       axios
-        .get(`http://localhost:5000/api/slider?page=home&key=intro-video`)
+        .get(`${apiURL}/api/slider?page=home&key=intro-video`)
         .then((res) => {
           if (res.status === 200) {
             const { data } = res.data;
@@ -44,16 +48,14 @@ function Home() {
 
   useEffect(() => {
     if (introVideos === null) {
-      axios
-        .get(`http://localhost:5000/api/intro-video?page=home`)
-        .then((res) => {
-          if (res.status === 200) {
-            const { data } = res.data;
-            if (data && data.length) {
-              setIntroVideos(data);
-            }
+      axios.get(`${apiURL}/api/intro-video?page=home`).then((res) => {
+        if (res.status === 200) {
+          const { data } = res.data;
+          if (data && data.length) {
+            setIntroVideos(data);
           }
-        });
+        }
+      });
     }
   }, [introVideos]);
 
@@ -87,7 +89,10 @@ function Home() {
                     className='carousel-image'
                     style={{
                       background:
-                        'url(' + item.Path + ') no-repeat center center fixed',
+                        'url(' +
+                        resourceURL +
+                        item.Path +
+                        ') no-repeat center center fixed',
                     }}
                   ></div>
                 </div>
@@ -166,13 +171,13 @@ function Home() {
                 src=''
                 frameBorder='0'
                 allow='accelerometer; autoplay; encrypted-media; gyroscope;'
-                data-src={mainVideo.Path}
+                data-src={resourceURL + mainVideo.Path}
               ></iframe>
 
               <div
                 className='videoPoster js-videoPoster'
                 style={{
-                  backgroundImage: `url(${mainVideo.Cover})`,
+                  backgroundImage: `url(${resourceURL + mainVideo.Cover})`,
                 }}
               >
                 <div className='videoPoster_overlay_hover'>
@@ -724,8 +729,13 @@ function Home() {
           >
             <div className='modal-dialog modal-lg'>
               <div className='modal-content'>
-                <video poster={item.Cover} id='player06' playsInline controls>
-                  <source src={item.Path} type='video/mp4' />
+                <video
+                  poster={resourceURL + item.Cover}
+                  id='player06'
+                  playsInline
+                  controls
+                >
+                  <source src={resourceURL + item.Path} type='video/mp4' />
                 </video>
               </div>
             </div>
@@ -945,7 +955,7 @@ function Home() {
                       className='product-card'
                       style={{ position: 'relative' }}
                     >
-                      <img src={item.Cover} alt='video award 2' />
+                      <img src={resourceURL + item.Cover} alt='video award 2' />
                       <div className='videoplay-overlay'>
                         <i className='video_play fa fa-play'></i>
                       </div>

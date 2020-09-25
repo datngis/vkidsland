@@ -2,27 +2,28 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export default function Products() {
+  const resourceURL = process.env.REACT_APP_RESOURCE_URL;
+  const apiURL = process.env.REACT_APP_PUBLIC_URL;
+
   const [mainVideo, setMainVideo] = useState(null);
   const [slider, setSlider] = useState(null);
 
   useEffect(() => {
     if (mainVideo === null) {
-      axios
-        .get(`http://localhost:5000/api/intro-video?page=product`)
-        .then((res) => {
-          if (res.status === 200) {
-            const { data } = res.data;
-            if (data && data.length) {
-              setMainVideo(data[0]);
-            }
+      axios.get(`${apiURL}/api/intro-video?page=product`).then((res) => {
+        if (res.status === 200) {
+          const { data } = res.data;
+          if (data && data.length) {
+            setMainVideo(data[0]);
           }
-        });
+        }
+      });
     }
   }, [mainVideo]);
 
   useEffect(() => {
     if (slider === null) {
-      axios.get(`http://localhost:5000/api/slider?page=product`).then((res) => {
+      axios.get(`${apiURL}/api/slider?page=product`).then((res) => {
         if (res.status === 200) {
           const { data } = res.data;
           if (data && data.length) {
@@ -46,12 +47,12 @@ export default function Products() {
                 src=''
                 frameBorder='0'
                 allow='accelerometer; autoplay; encrypted-media; gyroscope;'
-                data-src={mainVideo.Path}
+                data-src={resourceURL + mainVideo.Path}
               ></iframe>
               <div
                 className='videoPoster js-videoPoster'
                 style={{
-                  backgroundImage: `url(${mainVideo.Cover})`,
+                  backgroundImage: `url(${resourceURL + mainVideo.Cover})`,
                 }}
               >
                 <div className='videoPoster_overlay_hover'>
@@ -104,7 +105,9 @@ export default function Products() {
                   <div
                     className='carousel-image'
                     style={{
-                      background: `url(${item.Path}) no-repeat center center fixed`,
+                      background: `url(${
+                        resourceURL + item.Path
+                      }) no-repeat center center fixed`,
                     }}
                   ></div>
                 </div>
