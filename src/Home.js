@@ -3,7 +3,8 @@ import axios from 'axios';
 
 function Home() {
   const [headerSlider, setHeaderSlider] = useState(null);
-  const [videoSlider, setVideoSlider] = useState(null);
+  const [mainVideo, setMainVideo] = useState(null);
+  const [introVideos, setIntroVideos] = useState(null);
   const sampleSlider = [
     { ID: 1, Path: 'assets/images/main-banner/banner01.jpg' },
     { ID: 2, Path: 'assets/images/main-banner/banner02.jpg' },
@@ -14,9 +15,7 @@ function Home() {
     if (headerSlider === null) {
       setHeaderSlider(sampleSlider);
       axios
-        .get(
-          `http://localhost:5000/api/headerSlider?page=home&key=header-banner`
-        )
+        .get(`http://localhost:5000/api/slider?page=home&key=header-banner`)
         .then((res) => {
           if (res.status === 200) {
             const { data } = res.data;
@@ -29,17 +28,35 @@ function Home() {
   }, [headerSlider, sampleSlider]);
 
   useEffect(() => {
-    if (videoSlider === null) {
-      axios.get(`/api/headerSlider?page=home&key=intro-video`).then((res) => {
-        if (res.status === 200) {
-          const { data } = res.data;
-          if (data && data.length) {
-            setVideoSlider(data);
+    if (mainVideo === null) {
+      axios
+        .get(`http://localhost:5000/api/slider?page=home&key=intro-video`)
+        .then((res) => {
+          if (res.status === 200) {
+            const { data } = res.data;
+            if (data && data.length) {
+              setMainVideo(data[0]);
+            }
           }
-        }
-      });
+        });
     }
-  }, [videoSlider]);
+  }, [mainVideo]);
+
+  useEffect(() => {
+    if (introVideos === null) {
+      axios
+        .get(`http://localhost:5000/api/intro-video?page=home`)
+        .then((res) => {
+          if (res.status === 200) {
+            const { data } = res.data;
+            if (data && data.length) {
+              setIntroVideos(data);
+            }
+          }
+        });
+    }
+  }, [introVideos]);
+
   return (
     <>
       <section className='main-landing-section'>
@@ -138,34 +155,36 @@ function Home() {
         </div>
       </section>
 
-      <section id='vkid-banner-video' className='video-banner-section'>
-        <div className='video-wrap'>
-          <div className='embed-responsive embed-responsive-16by9 js-videoWrapper mb-2'>
-            <iframe
-              title='video'
-              id='vkid-video'
-              className='embed-responsive-item js-videoIframe'
-              src=''
-              frameBorder='0'
-              allow='accelerometer; autoplay; encrypted-media; gyroscope;'
-              data-src='assets/images/video/award/1/VKids Trend Top Management & Ambassadors Leaders.mp4'
-            ></iframe>
+      {mainVideo && (
+        <section id='vkid-banner-video' className='video-banner-section'>
+          <div className='video-wrap'>
+            <div className='embed-responsive embed-responsive-16by9 js-videoWrapper mb-2'>
+              <iframe
+                title='video'
+                id='vkid-video'
+                className='embed-responsive-item js-videoIframe'
+                src=''
+                frameBorder='0'
+                allow='accelerometer; autoplay; encrypted-media; gyroscope;'
+                data-src={mainVideo.Path}
+              ></iframe>
 
-            <div
-              className='videoPoster js-videoPoster'
-              style={{
-                backgroundImage:
-                  'url(assets/images/video/award/1/vkid-trend-top-management-ambassadors-leaders.jpg)',
-              }}
-            >
-              <div className='videoPoster_overlay_hover'>
-                <i className='video_play fa fa-play'></i>
+              <div
+                className='videoPoster js-videoPoster'
+                style={{
+                  backgroundImage: `url(${mainVideo.Cover})`,
+                }}
+              >
+                <div className='videoPoster_overlay_hover'>
+                  <i className='video_play fa fa-play'></i>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
+      {/* Management Team */}
       <section className='team-section bg-white py-4 full-height'>
         <div className='container'>
           <div className='row'>
@@ -273,6 +292,7 @@ function Home() {
         </div>
       </section>
 
+      {/* Our Product */}
       <section className='product-bg-parallax products-section full-height'>
         <div className='container'>
           <div className='row'>
@@ -283,7 +303,7 @@ function Home() {
               </div>
             </div>
           </div>
-          <div className='product-headerSlider'>
+          <div className='product-slider'>
             <div className='card-container'>
               <a
                 href='https://www.vschooltrend.com/'
@@ -344,6 +364,7 @@ function Home() {
         </div>
       </section>
 
+      {/* Awards & Recognition */}
       <section className='awards-section full-height'>
         <div className='container'>
           <div className='row'>
@@ -595,6 +616,7 @@ function Home() {
         </div>
       </section>
 
+      {/* Popup video */}
       <div
         className='modal fade bd-example-modal-lg-01'
         tabIndex='-1'
@@ -690,78 +712,27 @@ function Home() {
         </div>
       </div>
 
-      <div
-        className='modal fade reward-modal-lg-01'
-        tabIndex='-1'
-        role='dialog'
-        aria-labelledby='myLargeModalLabel'
-        aria-hidden='true'
-      >
-        <div className='modal-dialog modal-lg'>
-          <div className='modal-content'>
-            <video
-              poster='assets/images/video/award/2/vkids-trend2nd-anni-final.jpg'
-              id='player06'
-              playsInline
-              controls
-            >
-              <source
-                src='assets/images/video/award/2/Vkids Trend 2nd anni-final.mp4'
-                type='video/mp4'
-              />
-            </video>
+      {/* Reward Modal */}
+      {introVideos &&
+        introVideos.map((item, index) => (
+          <div
+            className={'modal fade reward-modal-lg-0' + index}
+            tabIndex='-1'
+            role='dialog'
+            aria-labelledby='myLargeModalLabel'
+            aria-hidden='true'
+          >
+            <div className='modal-dialog modal-lg'>
+              <div className='modal-content'>
+                <video poster={item.Cover} id='player06' playsInline controls>
+                  <source src={item.Path} type='video/mp4' />
+                </video>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        ))}
 
-      <div
-        className='modal fade reward-modal-lg-02'
-        tabIndex='-1'
-        role='dialog'
-        aria-labelledby='myLargeModalLabel'
-        aria-hidden='true'
-      >
-        <div className='modal-dialog modal-lg'>
-          <div className='modal-content'>
-            <video
-              poster='assets/images/video/award/3/vkids-trend-night.jpg'
-              id='player07'
-              playsInline
-              controls
-            >
-              <source
-                src='assets/images/video/award/3/VKids Trend Night.mp4'
-                type='video/mp4'
-              />
-            </video>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className='modal fade reward-modal-lg-03'
-        tabIndex='-1'
-        role='dialog'
-        aria-labelledby='myLargeModalLabel'
-        aria-hidden='true'
-      >
-        <div className='modal-dialog modal-lg'>
-          <div className='modal-content'>
-            <video
-              poster='assets/images/video/award/4/vschool-kiddos-recognition-2018.jpg'
-              id='player08'
-              playsInline
-              controls
-            >
-              <source
-                src='assets/images/video/award/4/VSchool Kiddos Recognition 2018.mp4'
-                type='video/mp4'
-              />
-            </video>
-          </div>
-        </div>
-      </div>
-
+      {/* Hall of fame */}
       <section className='ambassador-section bg-green full-height'>
         <div className='ambassador-container'>
           <div className='container'>
@@ -961,62 +932,32 @@ function Home() {
 
       <section className='video-award-bg-parallax products-section full-height'>
         <div className='container'>
-          <div className='video-award-headerSlider'>
-            <div className='card-container'>
-              <a
-                href='https://www.vschooltrend.com/'
-                data-toggle='modal'
-                data-target='.reward-modal-lg-01'
-              >
-                <div className='product-card' style={{ position: 'relative' }}>
-                  <img
-                    src='assets/images/video/award/2/vkids-trend2nd-anni-final.jpg'
-                    alt='video award 2'
-                  />
-                  <div className='videoplay-overlay'>
-                    <i className='video_play fa fa-play'></i>
-                  </div>
+          <div className='video-award-slider'>
+            {introVideos &&
+              introVideos.map((item, index) => (
+                <div className='card-container'>
+                  <a
+                    href='https://www.vschooltrend.com/'
+                    data-toggle='modal'
+                    data-target={'.reward-modal-lg-0' + index}
+                  >
+                    <div
+                      className='product-card'
+                      style={{ position: 'relative' }}
+                    >
+                      <img src={item.Cover} alt='video award 2' />
+                      <div className='videoplay-overlay'>
+                        <i className='video_play fa fa-play'></i>
+                      </div>
+                    </div>
+                  </a>
                 </div>
-              </a>
-            </div>
-            <div className='card-container'>
-              <a
-                href='https://www.vschooltrend.com/'
-                data-toggle='modal'
-                data-target='.reward-modal-lg-02'
-              >
-                <div className='product-card' style={{ position: 'relative' }}>
-                  <img
-                    src='assets/images/video/award/3/vkids-trend-night.jpg'
-                    alt='video award 3'
-                  />
-                  <div className='videoplay-overlay'>
-                    <i className='video_play fa fa-play'></i>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div className='card-container'>
-              <a
-                href='https://www.vschooltrend.com/'
-                data-toggle='modal'
-                data-target='.reward-modal-lg-03'
-              >
-                <div className='product-card' style={{ position: 'relative' }}>
-                  <img
-                    src='assets/images/video/award/4/vschool-kiddos-recognition-2018.jpg'
-                    alt='video award 4'
-                  />
-                  <div className='videoplay-overlay'>
-                    <i className='video_play fa fa-play'></i>
-                  </div>
-                </div>
-              </a>
-            </div>
+              ))}
           </div>
         </div>
       </section>
 
+      {/* Contact */}
       <section id='contact-us-section' className='bg-green'>
         <div className='row no-gutters'>
           <div className='col-12 col-md-6 contact-vh bg-getintouch'>

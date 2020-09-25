@@ -1,35 +1,67 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function Products() {
+  const [mainVideo, setMainVideo] = useState(null);
+  const [slider, setSlider] = useState(null);
+
+  useEffect(() => {
+    if (mainVideo === null) {
+      axios
+        .get(`http://localhost:5000/api/intro-video?page=product`)
+        .then((res) => {
+          if (res.status === 200) {
+            const { data } = res.data;
+            if (data && data.length) {
+              setMainVideo(data[0]);
+            }
+          }
+        });
+    }
+  }, [mainVideo]);
+
+  useEffect(() => {
+    if (slider === null) {
+      axios.get(`http://localhost:5000/api/slider?page=product`).then((res) => {
+        if (res.status === 200) {
+          const { data } = res.data;
+          if (data && data.length) {
+            setSlider(data);
+          }
+        }
+      });
+    }
+  }, [slider]);
+
   return (
     <>
-      <section className='video-banner-section'>
-        <div className='video-wrap'>
-          <div className='embed-responsive embed-responsive-16by9 js-videoWrapper'>
-            <iframe
-              title='video'
-              id='vschool-video'
-              className='embed-responsive-item js-videoIframe'
-              src=''
-              frameBorder='0'
-              allow='accelerometer; autoplay; encrypted-media; gyroscope;'
-              data-src='/assets/images/video/vschool-video.mp4'
-            ></iframe>
-            <div
-              className='videoPoster js-videoPoster'
-              style={{
-                backgroundImage:
-                  'url(/assets/images/products/vschool-video-thumb.jpg)',
-              }}
-            >
-              <div className='videoPoster_overlay_hover'>
-                <i className='video_play fa fa-play'></i>
+      {mainVideo && (
+        <section className='video-banner-section'>
+          <div className='video-wrap'>
+            <div className='embed-responsive embed-responsive-16by9 js-videoWrapper'>
+              <iframe
+                title='video'
+                id='vschool-video'
+                className='embed-responsive-item js-videoIframe'
+                src=''
+                frameBorder='0'
+                allow='accelerometer; autoplay; encrypted-media; gyroscope;'
+                data-src={mainVideo.Path}
+              ></iframe>
+              <div
+                className='videoPoster js-videoPoster'
+                style={{
+                  backgroundImage: `url(${mainVideo.Cover})`,
+                }}
+              >
+                <div className='videoPoster_overlay_hover'>
+                  <i className='video_play fa fa-play'></i>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className='banner-section bg-product-banner'>
         <div className='banner-content'>
@@ -50,81 +82,71 @@ export default function Products() {
           </div>
         </div>
       </section>
-
-      <section className='main-landing-section'>
-        <div
-          id='carouselExampleIndicators'
-          className='carousel slide'
-          data-ride='carousel'
-        >
-          <ol className='carousel-indicators'>
-            <li
-              data-target='#carouselExampleIndicators'
-              data-slide-to='0'
-              className='active'
-            ></li>
-            <li data-target='#carouselExampleIndicators' data-slide-to='1'></li>
-            <li data-target='#carouselExampleIndicators' data-slide-to='2'></li>
-            <li data-target='#carouselExampleIndicators' data-slide-to='3'></li>
-            <li data-target='#carouselExampleIndicators' data-slide-to='4'></li>
-            <li data-target='#carouselExampleIndicators' data-slide-to='5'></li>
-          </ol>
-          <div className='carousel-inner'>
-            <div className='carousel-item active'>
-              <div className='carousel-image prdslideimg1'></div>
+      {slider && (
+        <section className='main-landing-section'>
+          <div
+            id='carouselExampleIndicators'
+            className='carousel slide'
+            data-ride='carousel'
+          >
+            <ol className='carousel-indicators'>
+              {slider.map((_, index) => (
+                <li
+                  data-target='#carouselExampleIndicators'
+                  data-slide-to={index}
+                  className={!index ? 'active' : ''}
+                ></li>
+              ))}
+            </ol>
+            <div className='carousel-inner'>
+              {slider.map((item, index) => (
+                <div className={'carousel-item ' + (!index ? 'active' : '')}>
+                  <div
+                    className='carousel-image'
+                    style={{
+                      background: `url(${item.Path}) no-repeat center center fixed`,
+                    }}
+                  ></div>
+                </div>
+              ))}
             </div>
-            <div className='carousel-item'>
-              <div className='carousel-image prdslideimg2'></div>
+            <div className='carousel-caption'>
+              <a
+                className='text-uppercase white style2-btn'
+                href='https://www.facebook.com/vschooltrend'
+                rel='noopener noreferrer'
+                target='_blank'
+              >
+                Find out more
+              </a>
             </div>
-            <div className='carousel-item'>
-              <div className='carousel-image prdslideimg3'></div>
-            </div>
-            <div className='carousel-item'>
-              <div className='carousel-image prdslideimg4'></div>
-            </div>
-            <div className='carousel-item'>
-              <div className='carousel-image prdslideimg5'></div>
-            </div>
-            <div className='carousel-item'>
-              <div className='carousel-image prdslideimg6'></div>
-            </div>
-          </div>
-          <div className='carousel-caption'>
             <a
-              className='text-uppercase white style2-btn'
-              href='https://www.facebook.com/vschooltrend'
-              rel='noopener noreferrer'
-              target='_blank'
+              className='banner-prev carousel-control-prev'
+              href='#carouselExampleIndicators'
+              role='button'
+              data-slide='prev'
             >
-              Find out more
+              <span
+                className='carousel-control-prev-icon'
+                aria-hidden='true'
+              ></span>
+              <span className='sr-only'>Previous</span>
+            </a>
+            <a
+              href='#carouselExampleIndicators'
+              className='banner-next carousel-control-next'
+              role='button'
+              data-slide='next'
+            >
+              <span
+                className='carousel-control-next-icon'
+                aria-hidden='true'
+              ></span>
+              <span className='sr-only'>Next</span>
             </a>
           </div>
-          <a
-            className='banner-prev carousel-control-prev'
-            href='#carouselExampleIndicators'
-            role='button'
-            data-slide='prev'
-          >
-            <span
-              className='carousel-control-prev-icon'
-              aria-hidden='true'
-            ></span>
-            <span className='sr-only'>Previous</span>
-          </a>
-          <a
-            href='#carouselExampleIndicators'
-            className='banner-next carousel-control-next'
-            role='button'
-            data-slide='next'
-          >
-            <span
-              className='carousel-control-next-icon'
-              aria-hidden='true'
-            ></span>
-            <span className='sr-only'>Next</span>
-          </a>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className='explore-section bg-explore'>
         <div className='container'>
@@ -135,15 +157,14 @@ export default function Products() {
                 <p className='pt-3 pb-5'>
                   The Most Popular E-Learning Program In Malaysia
                 </p>
-                <NavLink to='https://www.vschooltrend.com'>
-                  <a
-                    className='style1-btn px-5 py-3'
-                    target='_blank'
-                    href='#findoutmore'
-                  >
-                    Find Out More
-                  </a>
-                </NavLink>
+
+                <a
+                  href='https://www.vschooltrend.com'
+                  className='style1-btn px-5 py-3'
+                  target='_blank'
+                >
+                  Find Out More
+                </a>
               </div>
             </div>
           </div>

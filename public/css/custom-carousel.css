@@ -10,7 +10,7 @@
     center fixed;
 }
 
-/* .carousel-inner .slideimg2 {
+.carousel-inner .slideimg2 {
   background: url(../assets/images/main-banner/banner02.jpg) no-repeat center
     center fixed;
 }
@@ -23,7 +23,7 @@
 .carousel-inner .prdslideimg1 {
   background: url(../assets/images/products/banner-vschool-01.jpg) no-repeat
     center center fixed;
-} */
+}
 
 .carousel-inner .prdslideimg2 {
   background: url(../assets/images/products/banner-vschool-02.jpg) no-repeat
